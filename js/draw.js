@@ -15,9 +15,15 @@ function draw(){
 			mousedown = false;
 		});
 
+		canvas.addEventListener('mouseout', function(){
+			mousedown = false;
+		})
+
 		canvas.addEventListener('mousemove', function(e){
 			if(mousedown){
 				paint(e);
+				var point = findxy(e);
+				// console.log(point[0] - canvas.offsetLeft, point[1] - canvas.offsetTop);
 			}
 		}, false);
 
