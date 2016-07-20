@@ -1,3 +1,6 @@
+
+var socket = io();
+
 function draw(){
 	var canvas = document.getElementById('canvas');
 	if (canvas.getContext){
@@ -22,25 +25,29 @@ function draw(){
 		canvas.addEventListener('mousemove', function(e){
 			if(mousedown){
 				paint(e);
-				var point = findxy(e);
 				// console.log(point[0] - canvas.offsetLeft, point[1] - canvas.offsetTop);
 			}
 		}, false);
 
 		canvas.addEventListener('mouseclick', function(e){
 			paint(e);
+			console.log('clicked');
 		});
 	
 		function paint(e){
 			var point = findxy(e);
 			point[0] -= canvas.offsetLeft
 			point[1] -= canvas.offsetTop
-			ctx.moveTo(point[0], point[1]);
-			ctx.lineTo(point[0]+1, point[1]+1);
-			ctx.stroke();
-			ctx.fill();
+			
+			socket.emit('request_paint', point);
 		}
 
+		socket.on('paint_on_client', function(data){
+			ctx.moveTo(data[0], data[1]);
+			ctx.lineTo(data[0]+1, data[1]+1);
+			ctx.stroke();
+			ctx.fill();	
+		});
 	}
 }
 
